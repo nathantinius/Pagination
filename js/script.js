@@ -93,3 +93,8 @@ const setActive = (event) => {
    const activeLink = event.target;
    activeLink.classList.add("active");
 }
+
+/***
+ * @todo Append search bar
+ * @todo Write serch function
+ */
