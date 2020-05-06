@@ -2,49 +2,94 @@
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
-   
+
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 
 /*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
+ * @constant studentsList: gets the children of the ul element
+ * @constant pageSize: sets the amount of students per page
+ * @type {string} pageNumber: used to keep track of the page number 
+ * in the showPage function.
+ * @constant getUI: this gets the div where the pagination will live
+ * @constant setDiv: creates a new div to live inside getUI
 ***/
 
+const studentsList = document.querySelector('.student-list').children;
+const pageSize = 10;
+let pageNumber = 0;
+const getUI = document.querySelector('.page');
+const setDiv = document.createElement('div');
+setDiv.className = "pagination";
 
-
-
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
-
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
+/***
+ * showPage Function -
+ * @constant startRange: sets the beginning of the page size
+ * @constant endRange: sets the end of the page size
+ * loop through the students list showing only the students that
+ * exist between startRange and endRange
+ * Use display none as we don't want to destroy list items
 ***/
 
+const showPage = (students, pageNumber) => {
 
+   let startRange = (pageNumber - 1) * pageSize;
+   console.log(startRange);
 
+   let endRange = pageNumber * pageSize;
+   console.log(endRange);
 
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
+   for (i = 0; i < students.length; i++) {
+      if (i >= startRange && i < endRange) {
+         students[i].style.display = '';
+      } else {
+         students[i].style.display = 'none';
+      }
+   }
+}
+
+// Defaults to page one.
+showPage(studentsList, 1);
+
+/***
+ * appendPageLinks Function -
+ * @type {string} html: builds the html to append to setDiv
+ * @constant totalPages: uses math to round to the next pageNumber 
+ * loop through the totalPages creating a link for each new page
+ * store the newly created pages to setDiv
+ * append setDiv to getUI
 ***/
 
+const appendPageLinks = () => {
+   let html = '<ul>';
+   const totalPages = Math.ceil(studentsList.length / pageSize);
 
+   for (i = 0; i < totalPages; i++) {
+      pageNumber = i + 1;
+      html += `<li><a class="link${i} pageLink" onclick="showPage(studentsList, ${pageNumber}); setActive(event)">${pageNumber}</a></li>`;
+   }
+   html += '</ul>';
 
+   setDiv.innerHTML = html;
+   getUI.append(setDiv);
+}
 
+appendPageLinks();
 
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
+/***
+ * @constant pages: used to set event listener
+ * loop through all the pageLinks
+ * remove active class
+ * add active to the event.target
+ ***/
+
+const pages = document.querySelectorAll('.pageLink');
+
+const setActive = (event) => {
+   for (i = 0; i < pages.length; i++) {
+      console.log(pages[i].classList);
+      pages[i].classList.remove("active");
+   }
+   const activeLink = event.target;
+   activeLink.classList.add("active");
+}
