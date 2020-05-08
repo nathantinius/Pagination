@@ -80,12 +80,22 @@ function buildPageButtons(students, pageTotal) {
 
    return setDiv;
 }
-
+/***
+ * appendPageLinks Function - 
+ * calculates the pageTotal
+ * 
+ * Removes existing pagination and rebuilds buttons
+ * based on results from searchStudents()
+ * 
+ * appends the buttons built in buildPageButtons()
+ * to the DOM
+ * 
+ * runs showPage() to build the paginated page
+ ***/
 function appendPageLinks(students) {
-   // Adds the pagination links to the page and displays the correct list items
    const pageTotal = Math.ceil(students.length / pageSize)
 
-   // Remove any current pagination links
+   // Remove existing pagination links
    ul.innerHTML = "";
 
    const div = buildPageButtons(students, pageTotal);
@@ -132,6 +142,10 @@ searchButton.addEventListener('click', (event) => {
 
 /***
  * SearchStudents Function -
+ * gets the value out of the searchBar
+ * checks the searchText against the studentName
+ * filters results
+ * passes results to appendPageLinks()
  ***/
 function searchStudents() {
    const searchText = searchBar.value.toLowerCase();
@@ -153,5 +167,7 @@ function searchStudents() {
 
 }
 
+//sets default page results against all students
 appendPageLinks(students);
+// appends the search bar to the page
 appendSearch();
